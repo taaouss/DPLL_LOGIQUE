@@ -1,1 +1,112 @@
 
+                      Mini-projet 1 : solveur DPLL récursif
+                             fichier RENDU
+                       (à remplir obligatoirement)
+
+**Un mini-projet sans fichier RENDU rempli ne recevra pas de note.**
+
+Date limite: 3 novembre 2023, 23h59
+
+Identité
+--------
+Nombre de binôme: 67
+Nom, prénom 1: Chalal Lyes
+Nom, prénom 2: Habbak Taous
+
+
+Questions sur votre code
+------------------------
+0. Avez-vous testé que `make dpll` s'exécute sans erreurs ou warnings,
+   et que ensuite `./dpll sudoku-4x4.cnf` donne la réponse attendue (voir
+   fichier README) ?
+
+--> Pas d'erreurs ou warnings .
+--> oui `./dpll sudoku-4x4.cnf` donne la réponse attendue qui est SATISFIABLE .
+
+
+
+1. Avez-vous utilisé la fonction `filter_map` (donné dans dpll.ml)
+   dans votre implémentation de `simplifie` ? 
+   - Si oui, expliquez en quelques phrases en français comment vous
+     l'avez utilisée.
+   - Si non, expliquez en quelques phrases en français comment
+     fonctionne votre implémentation de `simplifie`.
+
+--> Oui, nous avons utilisé `filter_map` et cela dans la fonction `simplifie`,
+   de tel sorte que nous avons définie dans `simplifie`une fonction auxiliaire 
+   `aux_filtre` qui simplifie une clause `liste` avec le littéral `element`.
+   On fait donc appel à `filter_map` en passant comme paramètre l'ensembles 
+   `clauses` et la le filtre `aux_filter` ainsi pour chaque élément de
+   `clauses` c-à-d une clause donnée  on applique `aux_filter` .
+
+
+2. Pour l'implémentation de `unitaire`, quelles sont les fonctions
+   auxiliaires que vous avez utilisées et/ou écrites ? (Par une
+   fonction auxiliaire, on entend ici soit une fonction d'une
+   bibliothèque, par exemple des fonctions comme `List.length`,
+   `List.rev_append`, ou une fonction `aux_unitaire` que vous avez
+   écrite vous-mêmes.) Expliquez en quelques phrases en français
+   comment ces fonctions auxiliaires sont utilisées dans votre
+   implémentation de la fonction `unitaire`.
+
+--> On a utilisé comme fonction auxiliaire : `List.length` qui nous 
+   retourne la longueure de notre liste, dans notre cas la liste représente 
+   une clause. Cela nous a aider car une clause unitaire ne contient qu'un
+   seul élément donc sa longueure est de 1.
+   Si le résultat est égale à 1 alors on retourne la clause, elle est unitaire .
+   Sinon on continue à chercher dans le reste de l'ensemble de la meme manière . 
+
+
+
+3. Pour l'implémentation de `pur`, quelles sont les fonctions
+   auxiliaires que vous avez utilisées et/ou écrites ?  Expliquez en
+   quelques phrases en français comment ces fonctions auxiliaires sont
+   utilisées dans votre implémentation de la fonction `pur`.
+
+--> On a utilisé 3 fonctions auxiliaires déja prètes : `List.flatten`,`List.mem`,
+   `List.filter` et on a écrit une qui est `pur_aux`.
+   - `List.flatten`clauses pour convertir une liste de listes en une liste unique 
+   contenant tous les littéraux de toutes les clauses sans suppression de doublants. 
+   - `List.mem` pour déterminer si un littéral (ou son complémentaire) est présent 
+   dans une liste de littéraux.
+   - `List.filter` utiliser pour éliminer les littéraux impurs et leurs 
+   complémentaires et ainsi réduire la compléxiter dans la suite de la recherche .
+   - `pur_aux` Elle recherche un littéral pur avec `List.mem`.Si un littéral pur est 
+   trouvé, il est retourné en tant que résultat. Si un littéral est trouvé ainsi que 
+   son complémentaire, la fonction élimine toutes les occurrences de ces deux littéraux
+  dans l'ensemble de clauses avec `List.filter`,  puis continue la recherche. Si aucun 
+  littéral pur n'est trouvé, la fonction retourne None pour indiquer l'absence de 
+  littéraux purs
+   
+
+---
+
+4. Donnez un exemple d'une formule pour laquelle les deux fonctions
+   `solveur_split` et `solveur_dpll_rec` ont un comportement
+   différent, et expliquez les différences entre ces deux fonctions.
+
+ -->on prend l'exemple suivant : [[1,2,3],[2,5,3],[3]] .
+   
+ -> `solveur_split` : il commence par choisir un littéral , il choisit  et simplifie avec, 
+ on aura [[2,5,3],[3]]. La fonction choisit maintenant le littéral 2 et après simplification 
+ on aura [[3]] , le choix du dernier littéral est evident c'est 3, et on aura ainsi un ensemble SAT.
+
+ ->`solveur_dpll_rec` : il commence par chercher une clause unitaire et dans ce cas c'est [3],
+  apres simplification on aura directement un ensemble SAT .
+ 
+ -Les différences entre les deux fonctions c'est l'ordre dans lequel elles effectuent les simplifications
+  et les choix de littéraux, l'ordre des choix peut affecter l'efficacité de la résolution.
+
+5. Avez-vous d'autres remarques sur votre rendu ? (question optionnelle)
+
+--> Nous avons penser à ajouter une version de `solveur_dpll_rec` amélioré qui est
+ `solveur_dpll_rec_version_speed`, cette dernière ne fait pas appel à `solveur_split` 
+ car elle vérifie après chaque choix de valeur de vérité d'un littéral s'il y'a soit 
+ une clause unitaire ou un littéral pur pour les simplifier, mais dans la fonction 
+ `solveur_dpll_rec` ce n'était pas le cas, car dés que l'on faisait appel à `solveur_split`
+  on ne vérifiait plus la présence de clause unitaire ou de littéral pur dans l'ensemble.
+
+
+---
+
+--fin du fichier RENDU--
