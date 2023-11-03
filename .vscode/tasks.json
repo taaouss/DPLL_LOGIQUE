@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build OCaml",
+            "type": "shell",
+            "command": "ocamlc",
+            "args": ["-o", "dpll", "dpll.ml"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
