@@ -83,9 +83,17 @@ Questions sur votre code
    `solveur_split` et `solveur_dpll_rec` ont un comportement
    différent, et expliquez les différences entre ces deux fonctions.
 
-**à remplir**
+ -->on prend l'exemple suivant : [[1,2,3],[2,5,3],[3]] .
+   
+ -> `solveur_split` : il commence par choisir un littéral , il choisit  et simplifie avec, 
+ on aura [[2,5,3],[3]]. La fonction choisit maintenant le littéral 2 et après simplification 
+ on aura [[3]] , le choix du dernier littéral est evident c'est 3, et on aura ainsi un ensemble SAT.
 
----
+ ->`solveur_dpll_rec` : il commence par chercher une clause unitaire et dans ce cas c'est [3],
+  apres simplification on aura directement un ensemble SAT .
+ 
+ -Les différences entre les deux fonctions c'est l'ordre dans lequel elles effectuent les simplifications
+  et les choix de littéraux, l'ordre des choix peut affecter l'efficacité de la résolution.
 
 5. Avez-vous d'autres remarques sur votre rendu ? (question optionnelle)
 
