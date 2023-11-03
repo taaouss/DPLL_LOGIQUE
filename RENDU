@@ -19,7 +19,8 @@ Questions sur votre code
    et que ensuite `./dpll sudoku-4x4.cnf` donne la réponse attendue (voir
    fichier README) ?
 
-**à remplir**
+--> Pas d'erreurs ou warnings .
+--> oui `./dpll sudoku-4x4.cnf` donne la réponse attendue qui est SATISFIABLE .
 
 
 
@@ -64,10 +65,10 @@ Questions sur votre code
 --> On a utilisé 3 fonctions auxiliaires déja prètes : `List.flatten`,`List.mem`,
    `List.filter` et on a écrit une qui est `pur_aux`.
    - `List.flatten`clauses pour convertir une liste de listes en une liste unique 
-   contenant tous les littéraux de toutes les clauses. 
+   contenant tous les littéraux de toutes les clauses sans suppression de doublants. 
    - `List.mem` pour déterminer si un littéral (ou son complémentaire) est présent 
    dans une liste de littéraux.
-   - `List.filter` utiliser pour éliminer les littéraux les littéraux impurs et leurs 
+   - `List.filter` utiliser pour éliminer les littéraux impurs et leurs 
    complémentaires et ainsi réduire la compléxiter dans la suite de la recherche .
    - `pur_aux` Elle recherche un littéral pur avec `List.mem`.Si un littéral pur est 
    trouvé, il est retourné en tant que résultat. Si un littéral est trouvé ainsi que 
@@ -97,7 +98,13 @@ Questions sur votre code
 
 5. Avez-vous d'autres remarques sur votre rendu ? (question optionnelle)
 
-**à remplir**
+--> Nous avons penser à ajouter une version de `solveur_dpll_rec` amélioré qui est
+ `solveur_dpll_rec_version_speed`, cette dernière ne fait pas appel à `solveur_split` 
+ car elle vérifie après chaque choix de valeur de vérité d'un littéral s'il y'a soit 
+ une clause unitaire ou un littéral pur pour les simplifier, mais dans la fonction 
+ `solveur_dpll_rec` ce n'était pas le cas, car dés que l'on faisait appel à `solveur_split`
+  on ne vérifiait plus la présence de clause unitaire ou de littéral pur dans l'ensemble.
+
 
 ---
 
