@@ -105,7 +105,7 @@ let rec solveur_split clauses interpretation =
 
 (* solveur dpll récursif *)
 (* ----------------------------------------------------------- *)
-
+exception PasDeLitteralPur;;
 (* pur : int list list -> int
     - si `clauses' contient au moins un littéral pur, retourne
       ce littéral ;
@@ -118,7 +118,7 @@ let pur clauses =
   let rec pur_aux list =
     match list with
     (* pas de clause trouvée , l'ensemble est vide on lève une exception `Failure "pas de littéral pur" *)
-    | [] -> raise (Failure "pas de littéral pur")
+    | [] -> raise PasDeLitteralPur
     | litteral :: reste_liste ->
       (*On cherche le complementaire du litteral dans l'ensemble de clauses *)
       (match List.mem (-litteral) reste_liste with
@@ -173,14 +173,47 @@ let rec solveur_dpll_rec clauses interpretation =
           |  p -> solveur_dpll_rec (simplifie p clauses) (p :: interpretation)
         with
         (*Pas de littéral pur alors on fait appel à `solveur_split` *)
-        | Failure "pas de littéral pur" -> solveur_split clauses interpretation))
+        | PasDeLitteralPur -> solveur_split clauses interpretation))
+;;
+
+
+let rec solveur_dpll_rec_version_speed clauses interpretation =
+   
+  match clauses with
+  | [] -> Some interpretation
+  (* si l'ensemble est vide alors il est SAT *)
+  | _ when List.mem [] clauses -> None
+  (* si l'ensemble contient la clause vide alors il est NON SAT *)
+  | _ ->
+    (try
+      (*On commence par chercher s'il existe une clause unitaire*)
+       match unitaire clauses with
+       (*Clause unitaire trouvée, on simplifie l'ensemble et on ajoute la valeur de vérité de la clause unitaire à l'interprétation*)
+       |  u -> solveur_dpll_rec_version_speed (simplifie u clauses) (u :: interpretation)
+     with
+     (*Pas de clause unitaire*)
+     | Not_found ->
+       (try
+          (*On continue par chercher s'il existe une clause avec un littéral pur*)
+          match pur clauses with
+          (*Littéral pur trouvé, on simplifie l'ensemble et on ajoute la valeur de vérité du littéral à l'interprétation*)
+          |  p -> solveur_dpll_rec_version_speed (simplifie p clauses) (p :: interpretation)
+        with
+        (*Pas de littéral pur alors on fait appel à `solveur_split` *)
+        | PasDeLitteralPur -> 
+          (* branchement *) 
+          let l = hd (hd clauses) in
+          let branche = solveur_dpll_rec_version_speed (simplifie l clauses) (l::interpretation) in
+          match branche with
+              | None -> solveur_dpll_rec_version_speed (simplifie (-l) clauses) ((-l)::interpretation)
+              | _    -> branche
+        ))
 ;;
 
 (* tests *)
 (* ----------------------------------------------------------- *)
 (* let () = print_modele (solveur_dpll_rec systeme []) *)
-(* let () = print_modele (solveur_dpll_rec coloriage []) *)
-let () =
-  let resultat_split = solveur_dpll_rec coloriage [] in
-  print_modele resultat_split
-;;
+ (* let () = print_modele (solveur_dpll_rec coloriage [])  *)
+ let () =
+ let clauses = Dimacs.parse Sys.argv.(1) in
+ print_modele (solveur_dpll_rec clauses []) 
